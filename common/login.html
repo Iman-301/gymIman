@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>website for gyms</title>
+    <link rel="stylesheet" href="../css/user_reg.css">  
+  
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"/>
+    <script>
+        function redirect(button){
+            if (button.classList.contains('but1')){
+                window.location.href='../user/gym_lst.html'
+            }
+            else if(button.classList.contains('but2')){
+                window.location.href='../owner/add.html'
+            }
+        }
+    </script>
+</head>
+<body>
+  
+    <main>
+        <h2>Login Page</h2>
+        <section class="login_info">
+            <input type="text" placeholder="Username" id="username" autocomplete="off" required>
+            <input type="password" placeholder="password" id="password" required autocomplete="off" oninput="maskPassword(this)">  
+        </section>
+       
+            
+    <section class="login_button">
+    <button class="but1" onclick="redirect(this)">Gym User</button>
+    <button class="but2" onclick="redirect(this)">Gym Owner</button>
+    <section>
+            
+            
+        
+    </main>
+    
+</body>
+</html>

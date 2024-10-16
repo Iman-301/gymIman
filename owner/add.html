@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>website for gyms</title>
+    <link rel="stylesheet" href="../css/owner/add.css">   
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"/>
+    <script defer src="../javasc/add.js"></script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body class="reg_body">
+    <header>
+        <h1>PeakPowerForge</h1>
+    </header>
+    <main>
+        <h3>Add and Edit your Gym Information</h3>
+        <section>
+            <div class="upload-container">
+                <div class="upload_box" onclick="document.getElementById('fileInput1').click()">
+                    <input type="file" id="fileInput1" accept="image/*" onchange="loadImage(this,0)">
+                    <img id="img1" class="main_image">
+                </div>
+                <div class="upload_box" onclick="document.getElementById('fileInput2').click()">
+                    <input type="file" id="fileInput2" accept='image/*' onchange="loadImage(this,1)">
+                    <img id="img2">
+                </div>
+                <div class="upload_box" onclick="document.getElementById('fileInput3').click()">
+                    <input type="file" id="fileInput3" accept="image/*" onchange="loadImage(this,2)">
+                    <img id="img3">
+    
+                </div>
+                <div class="upload_box" onclick="document.getElementById('fileInput4').click()">
+                    <input type="file" id="fileInput4" accept="image/*" onchange="loadImage(this,3)">
+                    <img id="img4">
+                </div>
+    
+            </div>
+            <form action="">
+            
+            
+                <h1>Facilities</h1>
+                    <input type="text" placeholder="Gym Name" id="name" autocomplete="off" required>
+                    <textarea id="description" name="description" rows="5" placeholder="Description of facilities"></textarea>
+                    <textarea id="description" name="description" rows="5" placeholder="Description of facilities"></textarea>
+    
+                    <h1>Service</h1>
+    
+                    <div class="service" id="service-container">
+    
+                    </div>
+                    <button onclick="addServiceField()">Add Service</button>
+    
+    
+                    <h1>Pricing</h1>
+                    <div class="pricing" id="pricing-container">
+    
+                    </div>
+                    <button onclick="addPricingField()">
+                        Add pricing plan
+                    </button>
+                    <h1>FAQ</h1>
+                    <div class="fq" id="faq-container">
+    
+                    </div>
+                    <button onclick="addFAQField()">Add FAQ</button>
+            </form>
+
+        </section>
+     
+        
+          
+    </main>
+    <footer>
+        <a href="add.html"><i class="fa fa-plus-circle" aria-hidden="true"></i></a>
+        <a href="logOut.html"><i class="fa-solid fa-right-from-bracket"></i></a>
+    
+    </footer>
+    
+</body>
+</html>

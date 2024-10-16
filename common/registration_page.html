@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>website for gyms</title>
+    <style>
+        
+        .active {
+            background-color: rgb(93, 93, 249)
+        
+        }
+    </style>
+    <link rel="stylesheet" href="../css/user_reg.css">   
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"/>
+
+    <script>
+        function redirectToLoginPage(){
+            window.location.href="login.html";
+        } 
+        function setActiveButton(button){
+            var buttons=document.querySelectorAll(".header_button");
+            buttons.forEach(
+             
+                function(btn){
+                    btn.classList.remove('active');
+                }
+            )
+            button.classList.add('active');
+
+            if (button.classList.contains('button1')){
+                window.location.href='registration_page.html'
+            }
+            else if (button.classList.contains('button2')){
+                window.location.href='gym_reg.html'
+            }
+
+
+        }
+     
+    </script>
+</head>
+<body class="reg_body">
+    <header>
+        <button class="header_button button1" onclick="setActiveButton(this)">As User</button>
+        <button class="header_button button2" onclick="setActiveButton(this)"><a href="gym_reg.html">As Gym Owner</a></button>
+    </header>
+    <main>
+        <h2>Create Your Account</h2>
+        <form id="registration_form" class="register_user">
+            <input type="text" placeholder="Name" id="name" autocomplete="off" required>
+            <input type="email" placeholder="Email Address" id="email" autocomplete="off" required>
+            <input type="text" placeholder="Username" id="username" autocomplete="off" required>
+            <input type="password" placeholder="password" id="password" required autocomplete="off" oninput="maskPassword(this)"> 
+            <input type="password" placeholder="Confirm Password" id="password" required autocomplete="off" oninput="maskPassword(this)"> 
+            <input type="number" placeholder="Age" min="10" max="100" id="ageForm" required>
+            <section class="rad">
+            <input type="radio" id="male" value="male" name="gender" required>
+            <label>Male</label>
+            <input type="radio" id="female"  value="female" name=gender required>
+            <label>Female</label>
+           </section>
+           <button class="user_button" onclick="redirectToLoginPage()">
+               Sign up
+           </button>
+        </form>   
+    </main>
+    
+</body>
+</html>

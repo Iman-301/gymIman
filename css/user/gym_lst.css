@@ -1,0 +1,75 @@
+body{
+    background: linear-gradient(to bottom, black 50%, rgb(100, 100, 193));
+    background-position: 100%;
+    background-repeat: no-repeat;
+    height: 100vh;
+    background-attachment: fixed;
+    color: white;
+}
+
+h2{
+    text-align: center;
+}
+.lst{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+
+
+}
+
+.container{
+    position: relative;
+    width: 260px;
+    padding: 10px;
+    margin: 25px;
+    
+}
+img {
+    flex: 1 1 50%;
+    min-width: 160px; 
+    min-height: 200px;
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 8px; 
+    box-shadow: 0 2px 4px white; 
+}
+h3 {
+    position: absolute;
+    top: 75%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.7); 
+    color: white;
+    padding: 10px;
+    text-align: center;
+    width: 60%; 
+}
+
+
+footer {
+    box-shadow: 4px 0 4px black; 
+    display: flex;
+    justify-content: space-around;
+}
+
+footer a {
+    color: black;
+  
+    font-size: 1.7rem;
+    padding: 10px;
+}
+
+footer a:hover {
+    color: #ffd700; /* Change color on hover */
+}
+
+.fa-solid {
+    margin-right: 5px;
+}
+@media only screen and (min-width: 1024px){
+    main{
+        min-height: 100vh
+    }
+}

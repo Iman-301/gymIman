@@ -1,0 +1,106 @@
+body{
+    background: linear-gradient(to bottom, black 50%, rgb(100, 100, 193));
+    background-position: 100%;
+    background-repeat: no-repeat;
+    height: 100vh;
+    background-attachment: fixed;
+    color: white;
+}
+h2{
+    text-align: center;text-align: center;
+}
+h1{
+    text-align: center;
+}
+h5{
+    text-align: center;
+    font-size: 1.5rem;
+}
+.buttons{
+    display: flex;
+    flex-direction: column;
+    max-width: 500px;
+    margin: 20px auto;
+    padding: 20px;
+}
+.buttons button{
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+     background-image: linear-gradient(144deg,rgb(11, 5, 5),rgb(250, 246, 246),rgb(22, 9, 9));
+     border-radius: 10px;
+     box-shadow: rgba(151, 65, 252, 0.2) 0 15px 30px -5px;
+     box-sizing: border-box;
+     color: black;
+     font-family: Phantomsans, sans-serif;
+     font-size: 20px;
+    
+     line-height: 1em;
+    
+     min-width: 140px;
+     padding: 15px;
+     user-select: none;
+     -webkit-user-select: none;
+     touch-action: manipulation;
+     white-space: nowrap;
+     cursor: pointer;
+     margin-top: 40px;
+     
+}
+.but{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+
+}
+
+
+.button-2 i{
+    margin-left: 20px;
+    color: red;
+
+}
+.button-3 i{
+    margin-left: 40px;
+    color: red;
+
+}
+.button-2 button i,h6{
+   font-size: 1.2rem;
+    text-align: center;
+    
+} 
+
+
+
+
+footer {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    box-shadow: 4px 0 4px black; 
+    display: flex;
+    justify-content: space-around;
+}
+
+footer a {
+    color: black;
+  
+    font-size: 1.7rem;
+    padding: 10px;
+}
+
+footer a:hover {
+    color: #ffd700; 
+}
+
+@media (min-width: 1024px) {
+    .faq-item {
+        margin-left: 220px;
+        margin-right: 220px
+    }
+    .testimonial{
+        text-align: center;
+    }
+    
+}

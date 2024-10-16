@@ -1,0 +1,195 @@
+body{
+    background: linear-gradient(to bottom, black, rgb(100, 100, 193));
+    background-position: 100%;
+    background-repeat: no-repeat;
+    height: 100vh;
+    background-attachment: fixed;
+}
+
+header{
+    display: flex;
+    justify-content: space-around;
+    padding-top: 60px;
+}
+header button{
+     border-radius: 10px;
+     box-sizing: border-box;
+     color: black;
+     font-family: Phantomsans, sans-serif;
+     font-size: 20px;
+     line-height: 1em;
+     min-width: 140px;
+     padding: 15px;
+     cursor: pointer;
+
+}
+.header_button:active{
+    background-color: blue
+}
+.button2 a, .button1 a{
+    text-decoration: none;
+    color: black;
+}
+main{
+    color: white
+}
+h2{
+    text-align: center;
+    padding-top: 20px;
+    font-size: 2rem;
+}
+.register_user{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* padding: 20px; */
+    
+}
+.register_user input{
+    padding-right: 100px;
+    padding-left: 70px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    margin: 15px;
+    border-radius: 15px;;
+
+}
+.register_user input::placeholder,
+.register_user textarea::placeholder {
+    font-size: 1.1em;
+}
+.register_user input,
+.register_user textarea {
+    font-size: 1.3em;
+}
+.rad{
+    font-size: 1.5rem;
+  
+}
+.user_button{
+    border-radius: 10px;
+    box-sizing: border-box;
+    color: black;
+    font-family: Phantomsans, sans-serif;
+    font-size: 20px;
+    color: white;
+    line-height: 1em;
+    background-color: black;
+    min-width: 250px;
+    padding: 20px;
+    margin: 20px;
+    cursor: pointer;
+
+    
+}
+
+.login_info{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 10%;
+   
+}
+
+.login_info input{
+    padding-right: 100px;
+    padding-left: 70px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    margin: 15px;
+    border-radius: 15px;
+    margin-bottom: 5%;
+
+}
+.login_info input::placeholder,
+.login_infotextarea textarea::placeholder {
+    font-size: 1.3em;
+}
+.login_info input,
+.login_info textarea {
+    font-size: 1.3em;
+} 
+.login_button{
+    display: flex;
+    justify-content: space-around;
+    padding-top: 60px;
+}
+.login_button button{
+    margin-left: 60px;
+    background: black;
+    border-radius: 10px;
+    box-sizing: border-box;
+    color: white;
+    font-family: Phantomsans, sans-serif;
+    font-size: 20px;
+    margin-top: 50px;
+    line-height: 1em;
+   
+    min-width: 140px;
+    padding: 15px;
+    cursor: pointer;
+}
+
+@media only screen and (max-width: 480px) {
+    h2{
+
+        font-size: 1.5rem;
+    }
+    .register_user input{
+        padding-right: 30px;
+        padding-left: 30px;
+        padding-top: 20px;
+        padding-bottom: 20px;
+        margin: 20px;
+        border-radius: 15px;;
+    
+    }
+    .login_info input{
+        padding-right: 30px;
+        padding-left: 30px;
+        padding-top: 20px;
+        padding-bottom: 20px;
+        margin: 15px;
+        border-radius: 15px;
+        margin-bottom: 5%;
+    
+    }
+    .login_button{
+        display: flex;
+        justify-content: space-around;
+        padding-top: 60px;
+    }
+    .login_button button{
+        margin-left: 0px;
+        background: black;
+        border-radius: 10px;
+        box-sizing: border-box;
+        color: white;
+        font-family: Phantomsans, sans-serif;
+        font-size: 20px;
+        margin-top: 50px;
+        line-height: 1em;
+       
+        min-width: 140px;
+        padding: 15px;
+        cursor: pointer;
+    }
+}
+
+@media only screen and (min-width: 1024px){
+    .login_button button{
+        margin-left: 180px;
+        background: black;
+        border-radius: 10px;
+        box-sizing: border-box;
+        color: white;
+        font-family: Phantomsans, sans-serif;
+        font-size: 20px;
+        margin-top: 0px;
+        line-height: 1em;
+       
+        min-width: 140px;
+        /* padding-top: 0px; */
+        cursor: pointer;
+    }
+}
