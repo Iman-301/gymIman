@@ -1,0 +1,140 @@
+
+body{
+    margin: 0;
+    padding: 20px;
+    background-image: url('../images/landing3.avif');
+    min-height: 100vh;
+ 
+    font-size: 1.5rem;
+    font-family: sans-serif;
+    font-style: italic;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center; 
+}
+.head{
+    font-style: italic;
+    color: rgb(243, 166, 166);
+    text-shadow: 4px 1px 4px rgba(0, 0, 0, 1);
+    padding-left: 20px;
+    font-size: 1.5rem;
+    padding-top: 30px;
+
+    
+}
+header{
+    display:flex;
+    flex-direction: row;
+    justify-content: space-between;
+  
+}
+.iconspace{
+    display:flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding-top: 0px;
+}
+.iconspace a{
+    margin-top: 0px;
+    color: #af5454;
+    margin-right: 40px;
+    margin-left: 20;
+    text-shadow: 4px 1px 4px rgb(191, 185, 185);
+    font-size: 1.9rem;
+}
+
+main{
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+    padding: 20px;
+}
+.quo{
+    align-self: flex-start;
+    margin-top:10px;
+    text-align: left;
+    font-size: 3rem;
+    font-family:Georgia, 'Times New Roman', Times, serif;
+    color: rgb(243, 166, 166);
+    text-shadow: 4px 1px 4px rgba(0, 0, 0, 1);
+
+}
+@media only screen and (max-width: 768px) {
+    /* p {
+        font-size: 2.2rem;
+    } */
+    .quo{
+        font-size: 2.2rem;
+    }
+}
+
+@media only screen and (max-width: 480px) {
+    .quo{
+        font-size: 1.8rem; 
+        text-shadow: 2px 0.5px 2px rgba(0, 0, 0, 0.5); 
+    }
+    .iconspace a{
+        margin-top: 0px;
+        color: #af5454;
+        margin-right: 40px;
+        margin-left: 20;
+        text-shadow: 4px 1px 4px rgb(191, 185, 185);
+       
+    }
+    header{
+        display:flex;
+        flex-direction: column;
+        justify-content: space-between;
+        font-size: 1.9rem;
+      
+    }
+}
+
+
+
+.button-1 {
+ display: flex;
+ justify-content: center;
+ align-items: center;
+  background-image: linear-gradient(144deg,rgb(243, 166, 166),gray,rgb(243, 166, 166));
+  border-radius: 10px;
+  box-shadow: rgba(151, 65, 252, 0.2) 0 15px 30px -5px;
+  box-sizing: border-box;
+  color: black;
+  font-family: Phantomsans, sans-serif;
+  font-size: 20px;
+ 
+  line-height: 1em;
+ 
+  min-width: 140px;
+  padding: 15px;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  white-space: nowrap;
+  cursor: pointer;
+  margin-top: 40px;
+  
+}
+.button-1 a{
+    text-decoration: none;
+    color: black;
+}
+
+
+
+@media (min-width: 768px) {
+  .button-64 {
+    font-size: 24px;
+    min-width: 196px;
+  }
+}
+
+.log{
+    color: white;
+    font-size: smaller;
+}
+
+.log a{
+    color: white
+}

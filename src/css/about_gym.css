@@ -1,0 +1,160 @@
+body{
+    background: linear-gradient(to bottom, black 50%, rgb(100, 100, 193));
+    background-position: 100%;
+    background-repeat: no-repeat;
+    height: 100%;
+    background-attachment: fixed;
+    color: white;
+    padding-top: 20px;
+}
+.main_div{
+    min-height: 100vh;
+}
+main {
+    flex:1
+}
+
+h2{
+   padding-left: 10px;
+    text-align: center;
+}
+p{
+    text-align: center;
+    font-size: 1.1rem;
+    padding-top: 15px;
+}
+
+.pics{
+    display: flex;
+    margin: 20px;
+    
+    
+    
+
+}
+.pics img{
+    padding: 10px;
+    margin: 10px;
+    /* flex: 1 1 50%; */
+    min-width: 160px; 
+    min-height: 200px;
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 8px; 
+    box-shadow: 0 2px 4px white; 
+}
+.lst{
+    font-size: 1.2rem;
+}
+h2{
+    font-size: 2rem;
+    padding: 0;
+    margin-bottom: 10;
+}
+.pricing{
+    display: flex;
+    flex-direction: column;
+}
+.plan h4{
+    padding-bottom: 0px;
+}
+.pricing li{
+    padding-left: 20px;
+    font-size: 1.1rem;
+}
+.bt{
+    display: flex;
+    justify-content: center;
+}
+button{
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+     background-image: linear-gradient(144deg,rgb(11, 5, 5),rgb(250, 246, 246),rgb(22, 9, 9));
+     border-radius: 10px;
+     box-shadow: rgba(151, 65, 252, 0.2) 0 15px 30px -5px;
+     box-sizing: border-box;
+     color: black;
+     font-family: Phantomsans, sans-serif;
+     font-size: 20px;
+    
+     line-height: 1em;
+
+     min-width: 140px;
+     padding: 15px;
+     user-select: none;
+     -webkit-user-select: none;
+     touch-action: manipulation;
+     white-space: nowrap;
+     cursor: pointer;
+     margin-top: 40px;
+     
+}
+.bt a{
+    color: black;
+}
+
+footer {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    box-shadow: 4px 0 4px black; 
+    display: flex;
+    justify-content: space-around;
+}
+
+footer a {
+    color: black;
+  
+    font-size: 1.7rem;
+    padding: 10px;
+}
+
+footer a:hover {
+    color: #ffd700; 
+}
+
+.fa-solid {
+    margin-right: 5px;
+}
+@media only screen and (max-width: 768px) {
+    /* p {
+        font-size: 2.2rem;
+    } */
+    .quo{
+        font-size: 2.2rem;
+    }
+}
+
+@media only screen and (max-width: 480px) {
+    
+.pics{
+    display: flex;
+    flex-direction: column;
+    margin: 20px;
+
+
+}
+h2{
+    font-size: 1.5rem;
+    
+}
+}
+
+@media (min-width: 1024px) {
+    .pics{
+        margin-left: 200px;
+        margin-right: 200px;
+    }
+    .pricing{
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+        
+    }
+    .pricing div{
+        padding: 30px;
+
+    }
+}
