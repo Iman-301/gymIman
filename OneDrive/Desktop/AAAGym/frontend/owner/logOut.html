@@ -1,0 +1,171 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>website for gyms</title>
+    <link rel="stylesheet" href="../css/user/log_out.css">   
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+  <header>
+    <h2 class="head">PeakPowerForge</h2>
+  </header>
+  <main>
+    <h5>Username</h5>
+    <h5>Email</h5>
+    <div class="buttons">
+        <button>Change Email</button>
+        <button>Change Password</button>
+        <button>Change Username</button>
+    </div>
+
+
+    <div class="but">
+        <div class="button-2">
+
+            <a href=""><i class="fa-solid fa-right-from-bracket"></i></a>
+            <h6>Log out</h6>
+        </div>
+    
+        
+            <div class="button-3">
+               <a href=""> <i class="fa-solid fa-trash"></i></a>
+                <h6>Delete account</h6>
+        
+        </div>
+    </div>
+
+    
+
+    
+  </main>
+
+  <script>
+    const API_URL = 'http://localhost:3000/auth';
+    const usernameElement = document.querySelector('h5:nth-of-type(1)');
+    const emailElement = document.querySelector('h5:nth-of-type(2)');
+    const changeEmailButton = document.querySelector('.buttons button:nth-of-type(1)');
+    const changePasswordButton = document.querySelector('.buttons button:nth-of-type(2)');
+    const changeUsernameButton = document.querySelector('.buttons button:nth-of-type(3)');
+    const logoutButton = document.querySelector('.button-2 a');
+    const deleteAccountButton = document.querySelector('.button-3 a');
+    function fetchUserDetails() {
+      const token = localStorage.getItem('access_token');
+      if (!token) {
+          alert('No access token found. Please log in.');
+          return;
+      }
+  
+      const decodedToken = JSON.parse(atob(token.split('.')[1])); // Decode JWT payload
+      usernameElement.textContent = `Username: ${decodedToken.username}`;
+      emailElement.textContent = `Email: ${decodedToken.email}`;
+  }
+
+  changeEmailButton.addEventListener('click', () => {
+    const newEmail = prompt('Enter your new email:');
+    if (newEmail) {
+        fetch(`${API_URL}/change-email`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${localStorage.getItem('access_token')}`
+            },
+            body: JSON.stringify({ email: newEmail })
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                alert('Email updated successfully!');
+                emailElement.textContent = `Email: ${data.email}`;
+            })
+            .catch((err) => console.error(err));
+    }
+});
+
+changePasswordButton.addEventListener('click', () => {
+  const newPassword = prompt('Enter your new password:');
+  if (newPassword) {
+      fetch(`${API_URL}/change-password`, {
+          method: 'PATCH',
+          headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${localStorage.getItem('access_token')}`
+          },
+          body: JSON.stringify({ password: newPassword })
+      })
+          .then((res) => res.json())
+          .then(() => alert('Password updated successfully!'))
+          .catch((err) => console.error(err));
+  }
+});
+changeUsernameButton.addEventListener('click', () => {
+  const newUsername = prompt('Enter your new username:');
+  if (newUsername) {
+      fetch(`${API_URL}/change-username`, {
+          method: 'PATCH',
+          headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${localStorage.getItem('access_token')}`
+          },
+          body: JSON.stringify({ username: newUsername })
+      })
+          .then((res) => res.json())
+          .then((data) => {
+              alert('Username updated successfully!');
+              usernameElement.textContent = `Username: ${data.username}`;
+          })
+          .catch((err) => console.error(err));
+  }
+});
+logoutButton.addEventListener('click', (e) => {
+  e.preventDefault();
+  fetch(`${API_URL}/logout`, {
+      method: 'POST',
+      headers: {
+          Authorization: `Bearer ${localStorage.getItem('access_token')}`
+      }
+  })
+      .then(() => {
+          localStorage.removeItem('access_token');
+          alert('Logged out successfully!');
+          window.location.href = '../common/login.html'; // Redirect to login page
+      })
+      .catch((err) => console.error(err));
+});
+deleteAccountButton.addEventListener('click', (e) => {
+  e.preventDefault();
+  if (confirm('Are you sure you want to delete your account?')) {
+      fetch(`${API_URL}/delete-account`, {
+          method: 'DELETE',
+          headers: {
+              Authorization: `Bearer ${localStorage.getItem('access_token')}`
+          }
+      })
+          .then(() => {
+              localStorage.removeItem('access_token');
+              alert('Account deleted successfully!');
+              window.location.href = '../common/registration_page.html'; // Redirect to registration page
+          })
+          .catch((err) => console.error(err));
+  }
+});
+document.addEventListener('DOMContentLoaded', fetchUserDetails);
+
+
+  </script>
+
+
+
+
+
+  <footer>
+    <a href="add.html"><i class="fa fa-plus-circle" aria-hidden="true"></i></a>
+    <a href="logOut.html"><i class="fa-solid fa-right-from-bracket"></i></a>
+
+</footer>
+
+    
+</body>
+</html>

@@ -1,0 +1,101 @@
+body{
+    background: linear-gradient(to bottom, black 50%, rgb(100, 100, 193));
+    background-position: 100%;
+    background-repeat: no-repeat;
+    height: 100vh;
+    background-attachment: fixed;
+    color: white;
+}
+.iconspace{
+    display:flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+.iconspace i{
+    margin-top: 30px;
+    color: rgb(100, 100, 193);
+    margin-right: 40px;
+    margin-left: 20;
+    font-size: 1.9rem;
+}
+h1{
+    text-align: center;
+}
+.container {
+    max-width: 500px;
+    margin: 20px auto;
+    padding: 20px;
+  
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+h2{
+    text-align: center;
+}
+input,
+textarea {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+input[type="submit"] {
+    background-color: #007bff;
+    color: #fff;
+    cursor: pointer;
+}
+
+input[type="submit"]:hover {
+    background-color: #0056b3;
+}
+.faq-item {
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 25px;
+}
+
+.faq-item h3 {
+    margin-top: 0;
+}
+.testimonial{
+    margin: 15px;
+}
+
+.faq-item p {
+    margin-bottom: 0;
+}
+
+footer {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    box-shadow: 4px 0 4px black; 
+    display: flex;
+    justify-content: space-around;
+}
+
+footer a {
+    color: black;
+  
+    font-size: 1.7rem;
+    padding: 10px;
+}
+
+footer a:hover {
+    color: #ffd700; 
+}
+
+@media (min-width: 1024px) {
+    .faq-item {
+        margin-left: 220px;
+        margin-right: 220px
+    }
+    .testimonial{
+        text-align: center;
+    }
+    
+}

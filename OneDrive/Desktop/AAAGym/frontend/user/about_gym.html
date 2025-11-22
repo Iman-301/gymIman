@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>website for gyms</title>
+    <link rel="stylesheet" href="../css/user/about_user.css">   
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <header>
+        <h2 id="gymName">Gym Facilities and Services</h2>
+    </header>
+    <main id="gymContent">
+        <div style="text-align: center; padding: 20px;">
+            <p>Loading gym details...</p>
+        </div>
+    </main>
+
+    <script>
+        // Get gym ID from URL parameter
+        function getGymIdFromUrl() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get('id');
+        }
+
+        // Fetch and display gym details
+        async function loadGymDetails() {
+            const gymId = getGymIdFromUrl();
+            
+            if (!gymId) {
+                document.getElementById('gymContent').innerHTML = 
+                    '<div style="text-align: center; padding: 20px;"><p>No gym ID provided. Please select a gym from the list.</p></div>';
+                return;
+            }
+
+            try {
+                const response = await fetch(`http://localhost:3000/gym/${gymId}`);
+                if (!response.ok) {
+                    throw new Error('Failed to fetch gym details');
+                }
+                const gym = await response.json();
+                
+                // Update header
+                document.getElementById('gymName').textContent = gym.name || 'Gym Facilities and Services';
+                
+                // Build description
+                const description = gym.description || 'Welcome to our gym!';
+                const descriptionParts = description.split('\n').filter(p => p.trim());
+                
+                // Build images section
+                let imagesHtml = '';
+                if (gym.images && Array.isArray(gym.images) && gym.images.length > 0) {
+                    // Filter out empty strings and invalid paths
+                    const validImages = gym.images.filter(img => img && img.trim() !== '' && img.startsWith('./images/'));
+                    
+                    if (validImages.length > 0) {
+                        imagesHtml = '<div class="pics">' + 
+                            validImages.slice(0, 3).map(img => {
+                                // Remove './' prefix and construct full URL
+                                const cleanPath = img.replace(/^\.\//, '').trim();
+                                const imageUrl = `http://localhost:3000/${cleanPath}`;
+                                console.log(`Loading gym detail image: ${imageUrl}`);
+                                return `<img src="${imageUrl}" alt="Gym image" onerror="console.error('Failed to load:', '${imageUrl}'); this.src='../img/e1.jpg'">`;
+                            }).join('') + 
+                            '</div>';
+                    } else {
+                        // No valid images, use defaults
+                        imagesHtml = '<div class="pics">' +
+                            '<img src="../img/e1.jpg" alt="">' +
+                            '<img src="../img/e2.jpg" alt="">' +
+                            '<img src="../img/e3.jpg" alt="">' +
+                            '</div>';
+                    }
+                } else {
+                    imagesHtml = '<div class="pics">' +
+                        '<img src="../img/e1.jpg" alt="">' +
+                        '<img src="../img/e2.jpg" alt="">' +
+                        '<img src="../img/e3.jpg" alt="">' +
+                        '</div>';
+                }
+                
+                // Build services list
+                let servicesHtml = '';
+                if (gym.services && gym.services.length > 0) {
+                    servicesHtml = gym.services.map(service => 
+                        `<ul class="lst">
+                            <li><strong>${service.title}:</strong> ${service.description}</li>
+                        </ul>`
+                    ).join('');
+                } else {
+                    servicesHtml = `
+                        <ul class="lst">
+                            <li><strong>Personal Training: </strong>Tailored workout plans and individual coaching sessions with certified trainers to help you reach your fitness goals.</li>
+                        </ul>
+                        <ul class="lst">
+                            <li><strong>Group Fitness Classes:</strong> Diverse classes such as yoga, HIIT, spinning, Zumba, and more led by experienced instructors for a fun and motivating workout experience.</li>
+                        </ul>
+                        <ul class="lst">
+                            <li><strong>Cardio Equipment:</strong> Access to a variety of cardio machines like treadmills, ellipticals, and stationary bikes for cardiovascular workouts.</li>
+                        </ul>
+                    `;
+                }
+                
+                // Build pricing plans
+                let pricingHtml = '';
+                if (gym.pricingPlans && gym.pricingPlans.length > 0) {
+                    pricingHtml = '<div class="container">' +
+                        '<h2>Gym Membership Pricing</h2>' +
+                        '<div class="pricing">' +
+                        gym.pricingPlans.map(plan => 
+                            `<div class="plan">
+                                <h3>${plan.name}</h3>
+                                <li>${plan.price}</li>
+                                <li>${plan.detail}</li>
+                            </div>`
+                        ).join('') +
+                        '</div></div>';
+                } else {
+                    pricingHtml = `
+                        <div class="container">
+                            <h2>Gym Membership Pricing</h2>
+                            <div class="pricing">
+                                <div class="plan">
+                                    <h3>Basic Plan</h3>
+                                    <li>1000 birr per month</li>
+                                    <li>Access to gym equipment</li>
+                                </div>
+                                <div class="plan">
+                                    <h3>Premium Plan</h3>
+                                    <li>2000 birr per month</li>
+                                    <li>Access to gym equipment + classes</li>
+                                </div>
+                                <div class="plan">
+                                    <h3>Platinum Plan</h3>
+                                    <li>3000 birr per month</li>
+                                    <li>Access to gym equipment, classes, and personal trainer</li>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                // Build FAQs if available
+                let faqsHtml = '';
+                if (gym.FAQs && gym.FAQs.length > 0) {
+                    faqsHtml = '<div class="container" style="margin-top: 20px;">' +
+                        '<h2>Frequently Asked Questions</h2>' +
+                        gym.FAQs.map(faq => 
+                            `<div style="margin-bottom: 15px;">
+                                <strong>Q: ${faq.question}</strong>
+                                <p>A: ${faq.answer}</p>
+                            </div>`
+                        ).join('') +
+                        '</div>';
+                }
+                
+                // Combine all content
+                const content = `
+                    ${descriptionParts.map(p => `<p>${p}</p>`).join('')}
+                    ${imagesHtml}
+                    ${servicesHtml}
+                    ${pricingHtml}
+                    ${faqsHtml}
+                    <div class="bt">
+                        <button onclick="addToVisitList(${gym.id})" style="cursor: pointer;">
+                            Add to visit
+                        </button>
+                    </div>
+                `;
+                
+                document.getElementById('gymContent').innerHTML = content;
+            } catch (error) {
+                console.error('Error loading gym details:', error);
+                document.getElementById('gymContent').innerHTML = 
+                    '<div style="text-align: center; padding: 20px;"><p>Error loading gym details. Please try again later.</p></div>';
+            }
+        }
+        
+        // Add gym to visit list
+        function addToVisitList(gymId) {
+            const visitList = localStorage.getItem('gymVisitList');
+            const list = visitList ? JSON.parse(visitList) : [];
+            
+            if (!list.includes(gymId)) {
+                list.push(gymId);
+                localStorage.setItem('gymVisitList', JSON.stringify(list));
+                alert('Gym added to your visit list!');
+                // Update button or show feedback
+            } else {
+                alert('This gym is already in your visit list!');
+            }
+        }
+
+        // Load gym details when page loads
+        document.addEventListener('DOMContentLoaded', loadGymDetails);
+    </script>
+       
+        
+    </main>
+    <footer>
+        <a href="gym_lst.html"><i class="fa-solid fa-house"></i></a>
+        <a href="about_gym.html"><i class="fa-solid fa-circle-info"></i></a>
+        <a href="go_checkout.html"><i class="fa fa-map-marker" aria-hidden="true"></i></a>
+        <a href="contact.html"><i class="fa-solid fa-address-book"></i></a>
+        <a href="log_out.html"><i class="fa-solid fa-right-from-bracket"></i></a>
+
+    </footer>
+
+    
+</body>
+</html>

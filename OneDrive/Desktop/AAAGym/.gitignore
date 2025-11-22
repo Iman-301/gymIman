@@ -1,0 +1,69 @@
+# Dependencies
+node_modules/
+**/node_modules/
+bacend/node_modules/
+frontend/node_modules/
+
+# Exclude other projects outside this directory
+../exp/
+../exp/**
+OneDrive/Desktop/exp/
+OneDrive/Desktop/exp/**
+
+# Environment variables
+.env
+.env.local
+.env.production
+.env.development
+.env.*
+*.env
+
+# Build outputs
+bacend/dist/
+bacend/coverage/
+dist/
+coverage/
+*.log
+*.tsbuildinfo
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.vs/
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Vercel
+.vercel
+.vercel/
+
+# Images - Large image files (uncomment if you don't want to track them)
+# bacend/src/images/gymImages/
+# *.jpg
+# *.jpeg
+# *.png
+# *.JPG
+# *.JPEG
+# *.PNG
+
+# Package manager
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Test files
+*.test.js
+*.spec.js
+coverage/
+
+# Temporary files
+*.tmp
+*.temp
+.cache/
+

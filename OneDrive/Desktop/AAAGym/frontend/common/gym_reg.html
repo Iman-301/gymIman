@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>website for gyms</title>
+    <style>
+        
+        .active {
+            background-color: rgb(93, 93, 249)
+        
+        }
+    </style>
+    <link rel="stylesheet" href="../css/user_reg.css">   
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"/>
+    
+</head>
+<body class="reg_body">
+    <header >
+        <button class="header_button button1" onclick="setActiveButton(this,'gym_user')">
+             As User
+           </button>
+        <button class="header_button button2" onclick="setActiveButton(this, 'gym_owner')">As Gym Owner</button>
+    </header>
+    <main>
+        <h2>Create Your Account</h2>
+        <form id="registration_form" class="register_user">
+            <input type="hidden" id="role" value="">
+            <input type="text" placeholder="Gym Name" id="name" autocomplete="off" required>
+            <input type="email" placeholder="Email Address" id="email" autocomplete="off" required>
+            <input type="text" placeholder="Username" id="username" autocomplete="off" required>
+            <input type="password" placeholder="Password" id="password" required autocomplete="off" oninput="maskPassword(this)"> 
+            <!-- <input type="password" placeholder="Confirm Password" id="password" required autocomplete="off" oninput="maskPassword(this)">  -->
+           
+           <button type="submit" class="user_button">
+               Sign up
+           </button>
+        </form>   
+    </main>
+    <script>
+        document.getElementById('registration_form').addEventListener('submit', async (event) => {
+            event.preventDefault();
+            
+            const role = document.getElementById('role').value || 'gym_user'; 
+            if (!role) {
+                alert("Please select a role (User or Gym Owner).");
+                return;
+            }
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const age = document.getElementById('ageForm')?.value;
+            const gender = document.querySelector('input[name="gender"]:checked')?.value;
+    
+            const userData = {
+                name,
+                email,
+                username,
+                password,
+                role,
+                age: role === 'gym_user' ? age : undefined,
+                gender: role === 'gym_user' ? gender : undefined,
+            };
+    
+            console.log('Sending data:', userData);
+            try {
+                const response = await fetch('http://localhost:3000/auth/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(userData),
+                });
+                const result = await response.json();
+    
+                if (response.ok) {
+                    alert('Registration successful!');
+                    window.location.href = 'login.html';
+                } else {
+                    alert(`Registration failed: ${result.message}`);
+                }
+            } catch (error) {
+                console.error('Error during registration:', error);
+                alert('An error occurred during registration.');
+            }
+        });
+    
+        function setActiveButton(button, role) {
+            document.querySelectorAll(".header_button").forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
+            setRole(role);  
+          
+        }
+        function setRole(role){
+           document.getElementById('role').value=role;
+        }
+    </script>
+    
+    
+</body>
+</html>
