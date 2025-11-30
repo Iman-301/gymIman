@@ -20,7 +20,7 @@ This is the **best approach** for your NestJS application.
 2. Sign up/login
 3. Click "New Project" → "Deploy from GitHub repo"
 4. Select your repository
-5. Set root directory to `bacend`
+5. Set root directory to `backend`
 6. Add environment variables:
    - `DATABASE_HOST`
    - `DATABASE_PORT`
@@ -38,7 +38,7 @@ This is the **best approach** for your NestJS application.
 3. Click "New" → "Web Service"
 4. Connect your GitHub repo
 5. Configure:
-   - **Root Directory**: `bacend`
+   - **Root Directory**: `backend`
    - **Build Command**: `npm install && npm run build`
    - **Start Command**: `npm run start:prod`
 6. Add environment variables (same as above)
@@ -79,7 +79,7 @@ Or manually update all `http://localhost:3000` to your backend URL in:
 
 #### Step 4: Update CORS in Backend
 
-In `bacend/src/main.ts`, update CORS to allow your Vercel domain:
+In `backend/src/main.ts`, update CORS to allow your Vercel domain:
 
 ```typescript
 app.enableCors({
@@ -175,5 +175,5 @@ Update the image upload logic to use cloud storage APIs.
 node update-api-urls.js https://your-backend-url.com
 
 # Test locally before deploying
-cd bacend && npm run build && npm run start:prod
+cd backend && npm run build && npm run start:prod
 ```

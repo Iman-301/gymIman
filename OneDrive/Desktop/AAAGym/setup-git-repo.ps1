@@ -4,7 +4,7 @@
 Write-Host "Setting up Git repository for AAAGym..." -ForegroundColor Green
 
 # Check if we're in the right directory
-if (-not (Test-Path "bacend") -or -not (Test-Path "frontend")) {
+if (-not (Test-Path "backend") -or -not (Test-Path "frontend")) {
     Write-Host "ERROR: Please run this script from the AAAGym folder!" -ForegroundColor Red
     exit 1
 }
@@ -37,7 +37,7 @@ git add GIT-SETUP.md
 
 # Add backend (excluding node_modules and dist)
 Write-Host "Adding backend files..." -ForegroundColor Cyan
-Get-ChildItem -Path "bacend" -Recurse -File | Where-Object {
+Get-ChildItem -Path "backend" -Recurse -File | Where-Object {
     $_.FullName -notmatch "node_modules" -and
     $_.FullName -notmatch "\\dist\\" -and
     $_.FullName -notmatch "\\.env" -and

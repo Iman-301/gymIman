@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "description": "Gym management application",
   "scripts": {
-    "build": "cd bacend && npm install && npm run build",
-    "start": "cd bacend && npm run start:prod",
-    "dev": "cd bacend && npm run start:dev"
+    "build": "cd backend && npm install && npm run build",
+    "start": "cd backend && npm run start:prod",
+    "dev": "cd backend && npm run start:dev"
   },
   "engines": {
     "node": ">=18.x"

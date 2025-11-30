@@ -39,7 +39,7 @@ Your git repository is initialized at `C:/Users/Ibrahim` (your user folder), whi
    git add update-api-urls.js
    git add DEPLOYMENT.md
    git add README-DEPLOYMENT.md
-   git add bacend/
+   git add backend/
    git add frontend/
    ```
 
@@ -79,13 +79,13 @@ But **this is NOT recommended** - it's better to have a separate repo for each p
 ## 📋 What Should Be Tracked
 
 Only these should be in your git repository:
-- ✅ `bacend/src/` (source code)
-- ✅ `bacend/package.json`, `tsconfig.json`, etc. (config files)
+- ✅ `backend/src/` (source code)
+- ✅ `backend/package.json`, `tsconfig.json`, etc. (config files)
 - ✅ `frontend/` (all frontend files)
 - ✅ Root config files (`.gitignore`, `vercel.json`, etc.)
-- ❌ `bacend/node_modules/` (excluded)
-- ❌ `bacend/dist/` (excluded)
-- ❌ `bacend/src/images/` (optional - can exclude if too large)
+- ❌ `backend/node_modules/` (excluded)
+- ❌ `backend/dist/` (excluded)
+- ❌ `backend/src/images/` (optional - can exclude if too large)
 - ❌ `.env` files (excluded)
 - ❌ Files from `exp/` or other projects (excluded)
 

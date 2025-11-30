@@ -8,7 +8,7 @@
 2. Click "New Project" → "Deploy from GitHub repo"
 3. Select your repository
 4. Railway will auto-detect it's a Node.js app
-5. Set **Root Directory** to `bacend`
+5. Set **Root Directory** to `backend`
 6. Add these environment variables:
    ```
    DATABASE_HOST=your-db-host
