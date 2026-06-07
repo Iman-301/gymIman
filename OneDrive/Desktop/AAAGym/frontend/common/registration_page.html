@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Website for Gyms</title>
+    <style>
+        .active {
+            background-color: rgb(93, 93, 249);
+        }
+    </style>
+    <link rel="stylesheet" href="../css/user_reg.css">   
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"/>
+</head>
+<body class="reg_body">
+    <header>
+        <button class="header_button button1" onclick="setActiveButton(this,'gym_user')">As User</button>
+        <button class="header_button button2" onclick="setActiveButton(this,'gym_owner')">As Gym Owner</button>
+    </header>
+    <main>  
+        <h2>Create Your Account</h2>
+        <form id="registration_form" class="register_user">
+            <input type="hidden" id="role" value="" required>
+            <input type="text" placeholder="Name" id="name" autocomplete="off" required>
+            <input type="email" placeholder="Email Address" id="email" autocomplete="off" required>
+            <input type="text" placeholder="Username" id="username" autocomplete="off" required>
+            <input type="password" placeholder="Password" id="password" required autocomplete="off">
+            <!-- <input type="password" placeholder="Confirm Password" id="confirm_password" required autocomplete="off"> -->
+            <input type="number" placeholder="Age" min="10" max="100" id="ageForm" required>
+            <section class="rad">
+                <input type="radio" id="male" value="male" name="gender" required>
+                <label for="male">Male</label>
+                <input type="radio" id="female" value="female" name="gender" required>
+                <label for="female">Female</label>
+            </section>
+            <button type="submit" class="user_button">Sign up</button>
+        </form>   
+    </main>
+
+    <script>
+        document.getElementById('registration_form').addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            const role = document.getElementById('role').value || 'gym_user'; 
+            if (!role) {
+                alert("Please select a role (User or Gym Owner).");
+                return;
+            }
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const ageValue = document.getElementById('ageForm')?.value;
+            const gender = document.querySelector('input[name="gender"]:checked')?.value;
+
+            // Convert age to number only if it exists and is valid
+            let ageNumber = undefined;
+            if (role === 'gym_user' && ageValue) {
+                const parsedAge = parseInt(ageValue, 10);
+                if (!isNaN(parsedAge)) {
+                    ageNumber = parsedAge;
+                }
+            }
+
+            const userData = {
+                name,
+                email,
+                username,
+                password,
+                role,
+                age: ageNumber,
+                gender: role === 'gym_user' ? gender : undefined,
+            };
+
+            console.log('Sending registration data:', userData);
+
+            try {
+                const response = await fetch('http://localhost:3000/auth/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(userData),
+                });
+                
+                const result = await response.json();
+
+                if (response.ok) {
+                    alert('Registration successful!');
+                    window.location.href = 'login.html';
+                } else {
+                    // Show more detailed error message
+                    const errorMsg = result.message || result.error || 'Unknown error';
+                    const errorDetails = result.message?.join ? result.message.join(', ') : errorMsg;
+                    alert(`Registration failed: ${errorDetails}`);
+                    console.error('Registration error:', result);
+                }
+            } catch (error) {
+                console.error('Error during registration:', error);
+                alert(`An error occurred during registration: ${error.message}`);
+            }
+        });
+
+        function setActiveButton(button, role) {
+            document.querySelectorAll(".header_button").forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
+            setRole(role);  
+
+          
+        }
+
+        function setRole(role) {
+            document.getElementById('role').value = role;
+        }
+    </script>
+</body>
+</html>

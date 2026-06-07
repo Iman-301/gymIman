@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Website for Gyms</title>
+    <link rel="stylesheet" href="../css/user_reg.css">  
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"/>
+</head>
+<body>
+    <main>
+        <h2>Login Page</h2>
+        <section class="login_info">
+            <input type="text" placeholder="Username" id="username" autocomplete="off" required>
+            <input type="password" placeholder="Password" id="password" required autocomplete="off">  
+        </section>
+        <section class="login_button">
+            <button class="but1" onclick="login('gym_user')">Gym User</button>
+            <button class="but2" onclick="login('gym_owner')">Gym Owner</button>
+        </section>
+    </main>
+
+    <script>
+        async function login(role) {
+          
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+         
+            if (!username || !password) {
+                alert("Please enter both username and password.");
+                return;
+            }
+
+            try {
+            
+                const response = await fetch('http://localhost:3000/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password, role })
+                });
+                const result = await response.json();
+
+                if (response.ok) {
+
+                    localStorage.setItem('access_token', result.access_token);
+                    const targetPage = role === 'gym_user' ? '../user/gym_lst.html' : '../owner/add.html';
+                    window.location.href = targetPage;
+                } else {
+                    alert(`Login failed: ${result.message}`);
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                alert('An error occurred during login.');
+            }
+        }
+    </script>
+</body>
+</html>

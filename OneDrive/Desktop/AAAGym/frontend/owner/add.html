@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>website for gyms</title>
+    <link rel="stylesheet" href="../css/owner/add.css">   
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"/>
+    <script defer src="../javasc/add.js"></script>
+  
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body class="reg_body">
+    <header>
+        <h1>PeakPowerForge</h1>
+    </header>
+    <main>
+        <h3>Add and Edit your Gym Information</h3>
+        <section>
+            <div class="upload-container">
+                <div class="upload_box" onclick="document.getElementById('fileInput1').click()">
+                    <input type="file" id="fileInput1" accept="image/*" onchange="loadImage(this,0)">
+                    <img id="img1" class="main_image">
+                </div>
+                <!-- <div class="upload_box" onclick="document.getElementById('fileInput2').click()">
+                    <input type="file" id="fileInput2" accept='image/*' onchange="loadImage(this,1)">
+                    <img id="img2">
+                </div>
+                <div class="upload_box" onclick="document.getElementById('fileInput3').click()">
+                    <input type="file" id="fileInput3" accept="image/*" onchange="loadImage(this,2)">
+                    <img id="img3">
+    
+                </div>
+                <div class="upload_box" onclick="document.getElementById('fileInput4').click()">
+                    <input type="file" id="fileInput4" accept="image/*" onchange="loadImage(this,3)">
+                    <img id="img4">
+                </div> -->
+    
+            </div>
+            <form action="">
+            
+            
+                <h1>Facilities</h1>
+                    <input type="text" placeholder="Gym Name" id="name" autocomplete="off" required>
+                    <textarea id="description" name="description" rows="25" placeholder="Description of facilities"></textarea>
+                   
+    
+                    <h1>Service</h1>
+    
+                    <div class="service" id="service-container">
+    
+                    </div>
+                    <button type="button" onclick="addServiceField()">Add Service</button>
+    
+    
+                    <h1>Pricing</h1>
+                    <div class="pricing" id="pricing-container">
+    
+                    </div>
+                    <button type="button"  onclick="addPricingField()">
+                        Add pricing plan
+                    </button>
+                    <h1>FAQ</h1>
+                    <div class="fq" id="faq-container">
+    
+                    </div>
+                    <button type="button"  onclick="addFAQField()">Add FAQ</button>
+                    <button type="submit">Submit</button>
+            </form>
+
+        </section>
+     
+        
+          
+    </main>
+    <script>
+        // Define uploadImageFile function here to ensure it's accessible
+        async function uploadImageFile(file, gymId) {
+            try {
+                const token = localStorage.getItem('access_token');
+                if (!token) {
+                    throw new Error('User is not authenticated. Please log in.');
+                }
+
+                const formData = new FormData();
+                formData.append('file', file);
+                if (gymId) {
+                    formData.append('gymId', gymId.toString());
+                }
+
+                const response = await fetch('http://localhost:3000/gym/upload-image', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                    },
+                    body: formData,
+                });
+
+                if (!response.ok) {
+                    const errorDetails = await response.json();
+                    throw new Error(errorDetails.message || 'Image upload failed.');
+                }
+
+                const result = await response.json();
+                console.log('Image uploaded:', result);
+                return result;
+            } catch (error) {
+                console.error('Error uploading image:', error);
+                throw error;
+            }
+        }
+
+        document.querySelector('form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+        
+            const name = document.getElementById('name').value;
+            const description = document.getElementById('description').value;
+            const services = Array.from(document.querySelectorAll('#service-container > div')).map(serviceField => ({
+                title: serviceField.querySelector('input').value,
+                description: serviceField.querySelector('textarea').value,
+            }));
+            const pricingPlans = Array.from(document.querySelectorAll('#pricing-container > div')).map(pricingField => {
+                const inputs = pricingField.querySelectorAll('input');
+                const textarea = pricingField.querySelector('textarea');
+                return {
+                    name: inputs[0].value, 
+                    price: inputs[1].value, 
+                    detail: textarea.value, 
+                };
+            });
+            const FAQs = Array.from(document.querySelectorAll('#faq-container > div')).map(faqField => ({
+                question: faqField.querySelector('input').value,
+                answer: faqField.querySelector('textarea').value,
+            }));
+            
+            // Don't send base64 images in JSON - they're too large
+            // Images will be uploaded separately after gym creation
+            const gymData = {
+                name,
+                description,
+                services,
+                pricingPlans,
+                FAQs,
+                images: [], // Empty array - images uploaded separately
+            };
+        
+            try {
+                const response = await fetch('http://localhost:3000/gym/create', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
+                    },
+                    body: JSON.stringify(gymData),
+                });
+        
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.message || 'Failed to create gym');
+                }
+        
+                const result = await response.json();
+                console.log('Gym created successfully:', result);
+                const newGymId = result.id;
+                console.log('Gym ID:', newGymId);
+                
+                // After gym creation, upload images if any were selected
+                // IMPORTANT: Pass the newly created gym ID to ensure images go to the correct gym
+                const imageInputs = document.querySelectorAll('.upload_box input[type="file"]');
+                const uploadedImages = [];
+                let uploadErrors = [];
+                
+                console.log(`Found ${imageInputs.length} image input(s) to check`);
+                console.log(`Will upload images to gym ID: ${newGymId}`);
+                
+                for (let i = 0; i < imageInputs.length; i++) {
+                    const input = imageInputs[i];
+                    if (input.files && input.files[0]) {
+                        console.log(`Uploading image ${i + 1}: ${input.files[0].name} (${input.files[0].size} bytes) to gym ${newGymId}`);
+                        try {
+                            const uploadResult = await uploadImageFile(input.files[0], newGymId);
+                            console.log('Image upload successful, result:', uploadResult);
+                            if (uploadResult.images && uploadResult.images.length > 0) {
+                                console.log(`Gym ${newGymId} now has ${uploadResult.images.length} image(s):`, uploadResult.images);
+                            }
+                            uploadedImages.push(input.files[0].name);
+                        } catch (error) {
+                            console.error(`Error uploading image ${i + 1}:`, error);
+                            uploadErrors.push(`${input.files[0].name}: ${error.message}`);
+                            // Continue with other images even if one fails
+                        }
+                    } else {
+                        console.log(`Image input ${i + 1}: No file selected`);
+                    }
+                }
+                
+                if (uploadedImages.length > 0) {
+                    if (uploadErrors.length > 0) {
+                        alert(`Gym information saved! ${uploadedImages.length} image(s) uploaded successfully. ${uploadErrors.length} failed: ${uploadErrors.join(', ')}`);
+                    } else {
+                        alert(`Gym information saved! ${uploadedImages.length} image(s) uploaded successfully.`);
+                    }
+                } else {
+                    if (uploadErrors.length > 0) {
+                        alert(`Gym information saved, but image uploads failed: ${uploadErrors.join(', ')}`);
+                    } else {
+                        alert('Gym information saved! (No images were selected to upload)');
+                    }
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert(`Failed to save gym information: ${error.message}`);
+            }
+        });
+        
+    </script>
+    <footer>
+        <a href="add.html"><i class="fa fa-plus-circle" aria-hidden="true"></i></a>
+        <a href="logOut.html"><i class="fa-solid fa-right-from-bracket"></i></a>
+    
+    </footer>
+    
+</body>
+</html>

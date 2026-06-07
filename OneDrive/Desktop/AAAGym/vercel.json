@@ -1,0 +1,40 @@
+{
+  "rewrites": [
+    {
+      "source": "/",
+      "destination": "/frontend/common/common_landing.html"
+    },
+    {
+      "source": "/registration_page.html",
+      "destination": "/frontend/common/registration_page.html"
+    },
+    {
+      "source": "/login.html",
+      "destination": "/frontend/common/login.html"
+    },
+    {
+      "source": "/gym_reg.html",
+      "destination": "/frontend/common/gym_reg.html"
+    },
+    {
+      "source": "/css/(.*)",
+      "destination": "/frontend/css/$1"
+    },
+    {
+      "source": "/img/(.*)",
+      "destination": "/frontend/img/$1"
+    },
+    {
+      "source": "/javasc/(.*)",
+      "destination": "/frontend/javasc/$1"
+    },
+    {
+      "source": "/images/(.*)",
+      "destination": "/frontend/images/$1"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/frontend/$1"
+    }
+  ]
+}

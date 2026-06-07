@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>website for gyms</title>
+    <link rel="stylesheet" href="../css/common_landing.css">   
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"/>
+    <script>
+        function redirect(button){
+            if (button.classList.contains('button-1')){
+                window.location.href='registration_page.html'
+            }
+        }
+    </script>
+</head>
+<body>
+    <header>
+        <h3 class="head">PeakPowerForge</h3>
+        <section class="iconspace">
+            <a href="https://www.facebook.com">
+                <i class="fab fa-facebook-f"></i>
+            </a>
+          
+            <a href="mailto:imanibrahim301@gmail.com">
+                <i class="far fa-envelope"></i>
+            </a>
+            <a href="tel:555-555-5555">
+                <i class="fas fa-mobile-alt"></i>
+            </a>
+        </section>
+    </header>
+    <section class="land">
+       
+        <main>
+            <p class="quo">"Strength is not about never<br> feeling weak, but about what<br> happens when you push<br> past that weakness."</p>
+            <button class="button-1" role="button" onclick="redirect(this)"><a href="registration_page.html">Get Started</a>
+                </button>
+
+                
+                <p class="log">I have an account already<a href="login.html"> login in</a></p>
+        </main>
+        
+           
+        
+    </section>
+   
+</body>
+</html>
