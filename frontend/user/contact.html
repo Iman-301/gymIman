@@ -1,85 +1,60 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>website for gyms</title>
-    <link rel="stylesheet" href="../css/user/user_contact.css">   
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"/>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Desk — AAAGym</title>
+  <link rel="icon" href="../favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/app.css">
 </head>
 <body>
-  <header>
-    
-    <section class="iconspace">
-        <a href="https://www.facebook.com">
-            <i class="fab fa-facebook-f"></i>
-        </a>
-      
-        <a href="mailto:imanibrahim301@gmail.com">
-            <i class="far fa-envelope"></i>
-        </a>
-        <a href="tel:555-555-5555">
-            <i class="fas fa-mobile-alt"></i>
-        </a>
-        <a href="@firdi188">
-            <i class="fa-brands fa-telegram"></i>
-        </a>
+  <main class="page split">
+    <section>
+      <p class="kicker">Front desk</p>
+      <h1 class="display" style="font-size: clamp(2.2rem, 6vw, 4rem);">Ask the register</h1>
+      <div class="faq-list">
+        <div class="faq"><strong>How do visits work?</strong><p>Pin gyms from a page. The list lives on this device until you remove it.</p></div>
+        <div class="faq"><strong>Is AAAGym a gym chain?</strong><p>No. It is a catalog. Each owner publishes their own room.</p></div>
+        <div class="faq"><strong>Can I bring a guest?</strong><p>Guest rules belong to each gym. Read the page or write the desk.</p></div>
+      </div>
     </section>
-  </header>
-    <main>
-        <h1>FAQ's</h1>
-        <div class="faq-item">
-            <h3>What are your membership options?</h3>
-            <p>We offer various membership plans including monthly, quarterly, and annual options. Visit our gym for more details.</p>
-        </div>
-        
-        <div class="faq-item">
-            <h3>Do you offer personal training sessions?</h3>
-            <p>Yes, we provide personalized training sessions with certified trainers. Contact us to schedule a session.</p>
-        </div>
-        
-        <div class="faq-item">
-            <h3>Can I bring a guest with me to the gym?</h3>
-            <p>Guest policies vary based on membership plans. Please check with our staff for more information on guest passes.</p>
-        </div>
-    
-        <div class="faq-item">
-            <h3>What fitness classes do you offer?</h3>
-            <p>We offer a variety of fitness classes including yoga, HIIT, spinning, and more. Check our schedule for class timings.</p>
-        </div>
-    
-        <div class="container">
-            <h2>Contact Us</h2>
-            <form>
-                <label for="name">Name:</label>
-                <input type="text" id="name" name="name" required>
-
-                <label for="email">Email:</label>
-                <input type="email" id="email" name="email" required>
-    
-                <label for="subject">Subject:</label>
-                <input type="text" id="subject" name="subject" required>
-    
-                <label for="message">Message:</label>
-                <textarea id="message" name="message" rows="4" required></textarea>
-    
-                <input type="submit" value="Submit">
-            </form>
-        </div>
-        
-      
-       
-    </main>
-    <footer>
-        <a href="gym_lst.html"><i class="fa-solid fa-house"></i></a>
-        <a href="about_gym.html"><i class="fa-solid fa-circle-info"></i></a>
-        <a href="go_checkout.html"><i class="fa fa-map-marker" aria-hidden="true"></i></a>
-        <a href="contact.html"><i class="fa-solid fa-address-book"></i></a>
-        <a href="log_out.html"><i class="fa-solid fa-right-from-bracket"></i></a>
-
-    </footer>
-
-    
+    <form class="panel" id="contact-form">
+      <p class="kicker">Write us</p>
+      <label class="field">Name<input id="name" required></label>
+      <label class="field">Email<input id="email" type="email" required></label>
+      <label class="field">Subject<input id="subject" required></label>
+      <label class="field">Message<textarea id="message" required></textarea></label>
+      <button class="btn" type="submit">Send</button>
+    </form>
+  </main>
+  <script src="../js/config.js"></script>
+  <script src="../js/api.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/ui.js"></script>
+  <script>
+    AAAGym.requireRole('gym_user');
+    AAAGym.mountChrome({ role: 'gym_user', active: 'contact' });
+    document.getElementById('contact-form').addEventListener('submit', async function (event) {
+      event.preventDefault();
+      try {
+        await AAAGym.request('/contact', {
+          method: 'POST',
+          body: JSON.stringify({
+            name: document.getElementById('name').value.trim(),
+            email: document.getElementById('email').value.trim(),
+            subject: document.getElementById('subject').value.trim(),
+            message: document.getElementById('message').value.trim()
+          })
+        });
+        event.target.reset();
+        AAAGym.toast('Message received', 'ok');
+      } catch (err) {
+        AAAGym.toast(err.message || 'Could not send', 'err');
+      }
+    });
+  </script>
 </body>
 </html>

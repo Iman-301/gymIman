@@ -1,117 +1,137 @@
-// import { IsString, IsOptional, IsArray } from 'class-validator';
-// export class CreateGymDto{
-//     @IsString()
-//     name: string;
-//     description: string;
-//     services: {title: string, description: string}[];
-//     pricingPlans: {name:string; price: string; detail: string}[];
-//     FAQs: {question:string; answer: string}[];
-//     @IsOptional()
-//     @IsArray()
-//     images: string[];
-
-// }
-
-// export class UpdateGymDto{
-//     name?: string;
-//     description?: string;
-//     services?: {title: string, description: string}[];
-//     pricingPlans?: {name:string, price: string, detail: string}[];
-//     FAQs?: {question:string, answer: string}[];
-//     images?: string[];
-
-
-
-// }
-
-import { IsString, IsOptional, IsArray, ValidateNested, IsObject } from 'class-validator';
 import { Type } from 'class-transformer';
+import {
+  IsArray,
+  IsOptional,
+  IsString,
+  MaxLength,
+  ValidateNested,
+} from 'class-validator';
 
-// Define nested DTOs for better structure and validation
 class ServiceDto {
-    @IsString()
-    title: string;
+  @IsString()
+  @MaxLength(80)
+  title: string;
 
-    @IsString()
-    description: string;
+  @IsString()
+  @MaxLength(400)
+  description: string;
 }
 
 class PricingPlanDto {
-    @IsString()
-    name: string;
+  @IsString()
+  @MaxLength(80)
+  name: string;
 
-    @IsString()
-    price: string;
+  @IsString()
+  @MaxLength(80)
+  price: string;
 
-    @IsString()
-    detail: string;
+  @IsString()
+  @MaxLength(400)
+  detail: string;
 }
 
 class FAQDto {
-    @IsString()
-    question: string;
+  @IsString()
+  @MaxLength(160)
+  question: string;
 
-    @IsString()
-    answer: string;
+  @IsString()
+  @MaxLength(800)
+  answer: string;
 }
 
 export class CreateGymDto {
-    @IsString()
-    name: string;
+  @IsString()
+  @MaxLength(80)
+  name: string;
 
-    @IsString()
-    description: string;
+  @IsString()
+  @MaxLength(4000)
+  description: string;
 
-    @IsArray()
-    @ValidateNested({ each: true })
-    @Type(() => ServiceDto)
-    services: ServiceDto[];
+  @IsOptional()
+  @IsString()
+  @MaxLength(80)
+  city?: string;
 
-    @IsArray()
-    @ValidateNested({ each: true })
-    @Type(() => PricingPlanDto)
-    pricingPlans: PricingPlanDto[];
+  @IsOptional()
+  @IsString()
+  @MaxLength(160)
+  location?: string;
 
-    @IsArray()
-    @ValidateNested({ each: true })
-    @Type(() => FAQDto)
-    FAQs: FAQDto[];
+  @IsOptional()
+  @IsString()
+  @MaxLength(40)
+  phone?: string;
 
-    @IsOptional()
-    @IsArray()
-    @IsString({ each: true }) // Ensures all elements are strings
-    images: string[];
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => ServiceDto)
+  services: ServiceDto[];
+
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => PricingPlanDto)
+  pricingPlans: PricingPlanDto[];
+
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => FAQDto)
+  FAQs: FAQDto[];
+
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  images?: string[];
 }
 
 export class UpdateGymDto {
-    @IsOptional()
-    @IsString()
-    name?: string;
+  @IsOptional()
+  @IsString()
+  @MaxLength(80)
+  name?: string;
 
-    @IsOptional()
-    @IsString()
-    description?: string;
+  @IsOptional()
+  @IsString()
+  @MaxLength(4000)
+  description?: string;
 
-    @IsOptional()
-    @IsArray()
-    @ValidateNested({ each: true })
-    @Type(() => ServiceDto)
-    services?: ServiceDto[];
+  @IsOptional()
+  @IsString()
+  @MaxLength(80)
+  city?: string;
 
-    @IsOptional()
-    @IsArray()
-    @ValidateNested({ each: true })
-    @Type(() => PricingPlanDto)
-    pricingPlans?: PricingPlanDto[];
+  @IsOptional()
+  @IsString()
+  @MaxLength(160)
+  location?: string;
 
-    @IsOptional()
-    @IsArray()
-    @ValidateNested({ each: true })
-    @Type(() => FAQDto)
-    FAQs?: FAQDto[];
+  @IsOptional()
+  @IsString()
+  @MaxLength(40)
+  phone?: string;
 
-    @IsOptional()
-    @IsArray()
-    @IsString({ each: true })
-    images?: string[];
+  @IsOptional()
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => ServiceDto)
+  services?: ServiceDto[];
+
+  @IsOptional()
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => PricingPlanDto)
+  pricingPlans?: PricingPlanDto[];
+
+  @IsOptional()
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => FAQDto)
+  FAQs?: FAQDto[];
+
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  images?: string[];
 }

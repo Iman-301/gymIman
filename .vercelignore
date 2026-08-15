@@ -3,10 +3,7 @@ node_modules
 .env.local
 *.log
 .DS_Store
-bacend/dist
-bacend/node_modules
-bacend/test
-bacend/coverage
-bacend/.git
-bacend/tsconfig.build.tsbuildinfo
-
+backend/dist
+backend/node_modules
+backend/coverage
+backend/uploads

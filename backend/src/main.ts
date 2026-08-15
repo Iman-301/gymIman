@@ -1,59 +1,72 @@
 import { ValidationPipe, BadRequestException } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { join } from 'path';
 import * as express from 'express';
 import * as fs from 'fs';
+import { AppModule } from './app.module';
+
+function parseOrigins(): string[] {
+  const fromEnv = process.env.FRONTEND_URL || process.env.CORS_ORIGINS || '';
+  const extras = fromEnv
+    .split(',')
+    .map((origin) => origin.trim())
+    .filter(Boolean);
+
+  const defaults = [
+    'http://localhost:3000',
+    'http://localhost:4173',
+    'http://localhost:5173',
+    'http://localhost:5500',
+    'http://localhost:8080',
+    'http://127.0.0.1:5500',
+    'http://127.0.0.1:8080',
+  ];
+
+  return [...new Set([...defaults, ...extras])];
+}
+
+function ensureDir(path: string) {
+  if (!fs.existsSync(path)) {
+    fs.mkdirSync(path, { recursive: true });
+  }
+}
 
 async function bootstrap() {
+  if (process.env.NODE_ENV === 'production' && !process.env.JWT_SECRET) {
+    throw new Error('JWT_SECRET must be set in production');
+  }
+
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
-  // Increase body size limit for JSON (to handle large payloads)
-  app.use(express.json({ limit: '50mb' }));
-  app.use(express.urlencoded({ limit: '50mb', extended: true }));
+  app.use(express.json({ limit: '8mb' }));
+  app.use(express.urlencoded({ limit: '8mb', extended: true }));
 
-  // Serve static files (images)
-  // Images are stored in src/images/gymImages/
-  // In development: use src/images (from project root)
-  // In production: use dist/images (from project root)
-  const projectRoot = process.cwd(); // This is the 'backend' directory
-  const srcImagesPath = join(projectRoot, 'src', 'images');
-  const distImagesPath = join(projectRoot, 'dist', 'images');
-  
-  // Check which path exists - prefer src/images for development
-  let imagesPath: string;
-  if (fs.existsSync(srcImagesPath)) {
-    imagesPath = srcImagesPath;
-    console.log('✓ Using development images path (src/images)');
-  } else if (fs.existsSync(distImagesPath)) {
-    imagesPath = distImagesPath;
-    console.log('✓ Using production images path (dist/images)');
-  } else {
-    // Fallback: try relative to __dirname (dist/src)
-    imagesPath = join(__dirname, '..', '..', 'src', 'images');
-    console.log('⚠ Using fallback images path');
+  const projectRoot = process.cwd();
+  const uploadPath = join(projectRoot, 'uploads', 'gym-images');
+  const legacySrcPath = join(projectRoot, 'src', 'images');
+  const legacyDistPath = join(projectRoot, 'dist', 'images');
+  ensureDir(uploadPath);
+
+  app.useStaticAssets(uploadPath, { prefix: '/images/gymImages/' });
+  if (fs.existsSync(legacySrcPath)) {
+    app.useStaticAssets(legacySrcPath, { prefix: '/images/' });
+  } else if (fs.existsSync(legacyDistPath)) {
+    app.useStaticAssets(legacyDistPath, { prefix: '/images/' });
   }
-  
-  console.log('Serving static images from:', imagesPath);
-  console.log('Path exists:', fs.existsSync(imagesPath));
-  
-  app.useStaticAssets(imagesPath, {
-    prefix: '/images/',
-  });
 
-  // Enable global validation pipes for DTO validation
   app.useGlobalPipes(
     new ValidationPipe({
-      whitelist: true, // Strip unknown properties
-      forbidNonWhitelisted: true, // Throw error on unknown properties
-      transform: true, // Automatically transform input to DTO types
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      transform: true,
+      transformOptions: { enableImplicitConversion: true },
       exceptionFactory: (errors) => {
-        const messages = errors.map(error => 
-          Object.values(error.constraints || {}).join(', ')
+        const messages = errors.flatMap((error) =>
+          Object.values(error.constraints || {}),
         );
         return new BadRequestException({
-          message: messages.length > 0 ? messages : 'Validation failed',
+          message: messages.length ? messages : ['Validation failed'],
           error: 'Bad Request',
           statusCode: 400,
         });
@@ -61,23 +74,25 @@ async function bootstrap() {
     }),
   );
 
-
-
-  
-
-  // Enable CORS
-  // In production, allow your frontend domain
-  const allowedOrigins = process.env.NODE_ENV === 'production' 
-    ? [process.env.FRONTEND_URL || 'https://your-frontend.vercel.app']
-    : ['http://localhost:8080', 'http://localhost:3000'];
-  
+  const origins = parseOrigins();
   app.enableCors({
-    origin: allowedOrigins,
+    origin: (origin, callback) => {
+      if (!origin || process.env.NODE_ENV !== 'production') {
+        callback(null, true);
+        return;
+      }
+      if (origins.includes('*') || origins.includes(origin)) {
+        callback(null, true);
+        return;
+      }
+      callback(new Error('Not allowed by CORS'));
+    },
     credentials: true,
   });
 
-  const PORT = process.env.PORT || 3000;
-  await app.listen(PORT);
-  console.log(`Application is running on: http://localhost:${PORT}`);
+  const port = Number(process.env.PORT) || 3000;
+  await app.listen(port);
+  console.log(`AAAGym API listening on http://localhost:${port}`);
 }
+
 bootstrap();

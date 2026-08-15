@@ -1,115 +1,84 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Website for Gyms</title>
-    <style>
-        .active {
-            background-color: rgb(93, 93, 249);
-        }
-    </style>
-    <link rel="stylesheet" href="../css/user_reg.css">   
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Join — AAAGym</title>
+  <link rel="icon" href="../favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/app.css">
 </head>
-<body class="reg_body">
-    <header>
-        <button class="header_button button1" onclick="setActiveButton(this,'gym_user')">As User</button>
-        <button class="header_button button2" onclick="setActiveButton(this,'gym_owner')">As Gym Owner</button>
-    </header>
-    <main>  
-        <h2>Create Your Account</h2>
-        <form id="registration_form" class="register_user">
-            <input type="hidden" id="role" value="" required>
-            <input type="text" placeholder="Name" id="name" autocomplete="off" required>
-            <input type="email" placeholder="Email Address" id="email" autocomplete="off" required>
-            <input type="text" placeholder="Username" id="username" autocomplete="off" required>
-            <input type="password" placeholder="Password" id="password" required autocomplete="off">
-            <!-- <input type="password" placeholder="Confirm Password" id="confirm_password" required autocomplete="off"> -->
-            <input type="number" placeholder="Age" min="10" max="100" id="ageForm" required>
-            <section class="rad">
-                <input type="radio" id="male" value="male" name="gender" required>
-                <label for="male">Male</label>
-                <input type="radio" id="female" value="female" name="gender" required>
-                <label for="female">Female</label>
-            </section>
-            <button type="submit" class="user_button">Sign up</button>
-        </form>   
-    </main>
-
-    <script>
-        document.getElementById('registration_form').addEventListener('submit', async (event) => {
-            event.preventDefault();
-
-            const role = document.getElementById('role').value || 'gym_user'; 
-            if (!role) {
-                alert("Please select a role (User or Gym Owner).");
-                return;
-            }
-            const name = document.getElementById('name').value;
-            const email = document.getElementById('email').value;
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-            const ageValue = document.getElementById('ageForm')?.value;
-            const gender = document.querySelector('input[name="gender"]:checked')?.value;
-
-            // Convert age to number only if it exists and is valid
-            let ageNumber = undefined;
-            if (role === 'gym_user' && ageValue) {
-                const parsedAge = parseInt(ageValue, 10);
-                if (!isNaN(parsedAge)) {
-                    ageNumber = parsedAge;
-                }
-            }
-
-            const userData = {
-                name,
-                email,
-                username,
-                password,
-                role,
-                age: ageNumber,
-                gender: role === 'gym_user' ? gender : undefined,
-            };
-
-            console.log('Sending registration data:', userData);
-
-            try {
-                const response = await fetch('http://localhost:3000/auth/register', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(userData),
-                });
-                
-                const result = await response.json();
-
-                if (response.ok) {
-                    alert('Registration successful!');
-                    window.location.href = 'login.html';
-                } else {
-                    // Show more detailed error message
-                    const errorMsg = result.message || result.error || 'Unknown error';
-                    const errorDetails = result.message?.join ? result.message.join(', ') : errorMsg;
-                    alert(`Registration failed: ${errorDetails}`);
-                    console.error('Registration error:', result);
-                }
-            } catch (error) {
-                console.error('Error during registration:', error);
-                alert(`An error occurred during registration: ${error.message}`);
-            }
-        });
-
-        function setActiveButton(button, role) {
-            document.querySelectorAll(".header_button").forEach(btn => btn.classList.remove('active'));
-            button.classList.add('active');
-            setRole(role);  
-
-          
-        }
-
-        function setRole(role) {
-            document.getElementById('role').value = role;
-        }
-    </script>
+<body>
+  <main class="auth-wrap">
+    <form class="auth-card" id="register-form">
+      <p class="kicker">Door one</p>
+      <h1>Take a desk</h1>
+      <p>Members browse the register. Owners publish a gym page.</p>
+      <div class="role-switch">
+        <button type="button" class="btn-ghost is-active" data-role="gym_user">Member</button>
+        <button type="button" class="btn-ghost" data-role="gym_owner">Owner</button>
+      </div>
+      <label class="field">Full name<input id="name" required></label>
+      <label class="field">Email<input id="email" type="email" required></label>
+      <label class="field">Username<input id="username" required></label>
+      <label class="field">Password (8+ characters)<input id="password" type="password" minlength="8" required></label>
+      <div id="member-fields">
+        <label class="field">Age<input id="age" type="number" min="10" max="100"></label>
+        <div class="role-switch">
+          <label><input type="radio" name="gender" value="male"> Male</label>
+          <label><input type="radio" name="gender" value="female"> Female</label>
+        </div>
+      </div>
+      <button class="btn" type="submit" style="width:100%">Create account</button>
+      <p>Already listed? <a href="login.html">Enter</a></p>
+    </form>
+  </main>
+  <script src="../js/config.js"></script>
+  <script src="../js/api.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/ui.js"></script>
+  <script>
+    AAAGym.mountChrome({ role: 'guest' });
+    var role = new URLSearchParams(location.search).get('role') === 'owner' ? 'gym_owner' : 'gym_user';
+    var memberFields = document.getElementById('member-fields');
+    function syncRole() {
+      memberFields.style.display = role === 'gym_user' ? 'block' : 'none';
+      document.querySelectorAll('[data-role]').forEach(function (el) {
+        el.classList.toggle('is-active', el.getAttribute('data-role') === role);
+      });
+    }
+    document.querySelectorAll('[data-role]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        role = btn.getAttribute('data-role');
+        syncRole();
+      });
+    });
+    syncRole();
+    document.getElementById('register-form').addEventListener('submit', async function (event) {
+      event.preventDefault();
+      var payload = {
+        name: document.getElementById('name').value.trim(),
+        email: document.getElementById('email').value.trim(),
+        username: document.getElementById('username').value.trim(),
+        password: document.getElementById('password').value,
+        role: role
+      };
+      if (role === 'gym_user') {
+        var age = parseInt(document.getElementById('age').value, 10);
+        if (age) payload.age = age;
+        var gender = document.querySelector('input[name="gender"]:checked');
+        if (gender) payload.gender = gender.value;
+      }
+      try {
+        await AAAGym.request('/auth/register', { method: 'POST', body: JSON.stringify(payload) });
+        AAAGym.toast('Account created. Enter with your role.', 'ok');
+        setTimeout(function () { location.href = 'login.html'; }, 700);
+      } catch (err) {
+        AAAGym.toast(err.message || 'Registration failed', 'err');
+      }
+    });
+  </script>
 </body>
 </html>

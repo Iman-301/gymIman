@@ -1,45 +1,37 @@
-import { Entity, Column, PrimaryGeneratedColumn, AfterInsert, AfterUpdate, AfterRemove } from "typeorm";
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
-export class Gym{
-    @PrimaryGeneratedColumn()
-    id: number;
+export class Gym {
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @Column()
-    name: string;
+  @Column()
+  name: string;
 
-    @Column('text')
-    description: string;
+  @Column('text')
+  description: string;
 
-    @Column('json',)
-    services: {title: string, description: string}[];
+  @Column({ nullable: true })
+  city: string;
 
-    @Column('json')
-    pricingPlans: {name: string, price: string, detail: string}[];
+  @Column({ nullable: true })
+  location: string;
 
-    @Column('json')
-    FAQs: {question: string, answer: string}[];
+  @Column({ nullable: true })
+  phone: string;
 
-    @Column()
-    ownerId: number; 
+  @Column('json')
+  services: { title: string; description: string }[];
 
-    @Column('simple-array')
-    images: string[];
+  @Column('json')
+  pricingPlans: { name: string; price: string; detail: string }[];
 
-    @AfterInsert()
-    logInsert() {
-      console.log('Inserted gym with id', this.id);
-    }
-  
-    @AfterUpdate()
-    logUpdate() {
-      console.log('Updated gym with id', this.id);
-    }
-  
-    @AfterRemove()
-    logRemove() {
-      console.log('Removed gym with id', this.id);
-    }
+  @Column('json')
+  FAQs: { question: string; answer: string }[];
+
+  @Column()
+  ownerId: number;
+
+  @Column('simple-array', { nullable: true })
+  images: string[];
 }
-
-

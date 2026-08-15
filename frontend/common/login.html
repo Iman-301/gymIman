@@ -1,59 +1,62 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Website for Gyms</title>
-    <link rel="stylesheet" href="../css/user_reg.css">  
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Enter — AAAGym</title>
+  <link rel="icon" href="../favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/app.css">
 </head>
 <body>
-    <main>
-        <h2>Login Page</h2>
-        <section class="login_info">
-            <input type="text" placeholder="Username" id="username" autocomplete="off" required>
-            <input type="password" placeholder="Password" id="password" required autocomplete="off">  
-        </section>
-        <section class="login_button">
-            <button class="but1" onclick="login('gym_user')">Gym User</button>
-            <button class="but2" onclick="login('gym_owner')">Gym Owner</button>
-        </section>
-    </main>
-
-    <script>
-        async function login(role) {
-          
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-
-         
-            if (!username || !password) {
-                alert("Please enter both username and password.");
-                return;
-            }
-
-            try {
-            
-                const response = await fetch('http://localhost:3000/auth/login', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ username, password, role })
-                });
-                const result = await response.json();
-
-                if (response.ok) {
-
-                    localStorage.setItem('access_token', result.access_token);
-                    const targetPage = role === 'gym_user' ? '../user/gym_lst.html' : '../owner/add.html';
-                    window.location.href = targetPage;
-                } else {
-                    alert(`Login failed: ${result.message}`);
-                }
-            } catch (error) {
-                console.error('Login error:', error);
-                alert('An error occurred during login.');
-            }
-        }
-    </script>
+  <main class="auth-wrap">
+    <form class="auth-card" id="login-form">
+      <p class="kicker">Door two</p>
+      <h1>Enter the register</h1>
+      <p>Same desk for members and owners. Choose the role you signed up with.</p>
+      <div class="role-switch">
+        <button type="button" class="btn-ghost is-active" data-role="gym_user">Member</button>
+        <button type="button" class="btn-ghost" data-role="gym_owner">Owner</button>
+      </div>
+      <label class="field">Username<input id="username" autocomplete="username" required></label>
+      <label class="field">Password<input id="password" type="password" autocomplete="current-password" required></label>
+      <button class="btn" type="submit" style="width:100%">Enter</button>
+      <p>New here? <a href="registration_page.html">Join the register</a></p>
+    </form>
+  </main>
+  <script src="../js/config.js"></script>
+  <script src="../js/api.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/ui.js"></script>
+  <script>
+    AAAGym.mountChrome({ role: 'guest' });
+    var role = 'gym_user';
+    document.querySelectorAll('[data-role]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        role = btn.getAttribute('data-role');
+        document.querySelectorAll('[data-role]').forEach(function (el) { el.classList.remove('is-active'); });
+        btn.classList.add('is-active');
+      });
+    });
+    document.getElementById('login-form').addEventListener('submit', async function (event) {
+      event.preventDefault();
+      try {
+        var result = await AAAGym.request('/auth/login', {
+          method: 'POST',
+          body: JSON.stringify({
+            username: document.getElementById('username').value.trim(),
+            password: document.getElementById('password').value,
+            role: role
+          })
+        });
+        localStorage.setItem('access_token', result.access_token);
+        location.href = role === 'gym_owner' ? '../owner/add.html' : '../user/gym_lst.html';
+      } catch (err) {
+        AAAGym.toast(err.message || 'Login failed', 'err');
+      }
+    });
+  </script>
 </body>
 </html>

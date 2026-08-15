@@ -1,194 +1,58 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>website for gyms</title>
-    <link rel="stylesheet" href="../css/user/go_check.css">   
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"/>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-   
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Visits — AAAGym</title>
+  <link rel="icon" href="../favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/app.css">
 </head>
 <body>
-    <header>
-        <h2>I will visit</h2>
-    </header>
-   <main id="visitListContainer">
-        <div style="text-align: center; padding: 20px;">
-            <p>Loading your visit list...</p>
-        </div>
-   </main>
-    <footer>
-        <a href="gym_lst.html"><i class="fa-solid fa-house"></i></a>
-        <a href="about_gym.html"><i class="fa-solid fa-circle-info"></i></a>
-        <a href="go_checkout.html"><i class="fa fa-map-marker" aria-hidden="true"></i></a>
-        <a href="contact.html"><i class="fa-solid fa-address-book"></i></a>
-        <a href="log_out.html"><i class="fa-solid fa-right-from-bracket"></i></a>
+  <main class="page">
+    <p class="kicker">Your list</p>
+    <h1 class="display" style="font-size: clamp(2.4rem, 6vw, 4.4rem);">I will walk in</h1>
+    <div class="visit-list" id="list"></div>
+  </main>
+  <script src="../js/config.js"></script>
+  <script src="../js/api.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/ui.js"></script>
+  <script>
+    AAAGym.requireRole('gym_user');
+    AAAGym.mountChrome({ role: 'gym_user', active: 'visits' });
+    var listEl = document.getElementById('list');
 
-    </footer>
-    <script>
-        // Get gym ID from URL if coming from "Add to visit" button
-        function getGymIdFromUrl() {
-            const urlParams = new URLSearchParams(window.location.search);
-            return urlParams.get('gymId');
-        }
-
-        // Get visit list from localStorage
-        function getVisitList() {
-            const visitList = localStorage.getItem('gymVisitList');
-            return visitList ? JSON.parse(visitList) : [];
-        }
-
-        // Save visit list to localStorage
-        function saveVisitList(visitList) {
-            localStorage.setItem('gymVisitList', JSON.stringify(visitList));
-        }
-
-        // Add gym to visit list
-        function addGymToVisitList(gymId) {
-            const visitList = getVisitList();
-            if (!visitList.includes(gymId)) {
-                visitList.push(gymId);
-                saveVisitList(visitList);
-                console.log(`Added gym ${gymId} to visit list`);
-                return true;
-            } else {
-                console.log(`Gym ${gymId} is already in visit list`);
-                return false;
-            }
-        }
-
-        // Remove gym from visit list
-        function removeGymFromVisitList(gymId) {
-            const visitList = getVisitList();
-            const index = visitList.indexOf(gymId);
-            if (index > -1) {
-                visitList.splice(index, 1);
-                saveVisitList(visitList);
-                console.log(`Removed gym ${gymId} from visit list`);
-                return true;
-            }
-            return false;
-        }
-
-        // Load and display visit list
-        async function loadVisitList() {
-            const container = document.getElementById('visitListContainer');
-            const visitList = getVisitList();
-
-            // Check if gymId is in URL (coming from "Add to visit")
-            const gymIdFromUrl = getGymIdFromUrl();
-            if (gymIdFromUrl) {
-                const added = addGymToVisitList(parseInt(gymIdFromUrl, 10));
-                // Remove gymId from URL to avoid re-adding on refresh
-                window.history.replaceState({}, document.title, window.location.pathname);
-                if (added) {
-                    alert('Gym added to your visit list!');
-                } else {
-                    alert('This gym is already in your visit list!');
-                }
-            }
-
-            if (visitList.length === 0) {
-                container.innerHTML = `
-                    <div style="text-align: center; padding: 40px;">
-                        <p style="font-size: 18px; color: #666;">Your visit list is empty.</p>
-                        <p style="margin-top: 10px;">Click "Add to visit" on any gym to add it here!</p>
-                        <a href="gym_lst.html" style="display: inline-block; margin-top: 20px; padding: 10px 20px; background-color: #4CAF50; color: white; text-decoration: none; border-radius: 5px;">Browse Gyms</a>
-                    </div>
-                `;
-                return;
-            }
-
-            // Fetch gym details for all gyms in visit list
-            container.innerHTML = '<div style="text-align: center; padding: 20px;"><p>Loading gyms...</p></div>';
-            
-            try {
-                const gymPromises = visitList.map(gymId => 
-                    fetch(`http://localhost:3000/gym/${gymId}`)
-                        .then(res => res.ok ? res.json() : null)
-                        .catch(err => {
-                            console.error(`Error fetching gym ${gymId}:`, err);
-                            return null;
-                        })
-                );
-
-                const gyms = await Promise.all(gymPromises);
-                const validGyms = gyms.filter(gym => gym !== null);
-
-                if (validGyms.length === 0) {
-                    container.innerHTML = `
-                        <div style="text-align: center; padding: 40px;">
-                            <p style="font-size: 18px; color: #666;">No valid gyms found in your visit list.</p>
-                            <button onclick="clearVisitList()" style="margin-top: 20px; padding: 10px 20px; background-color: #f44336; color: white; border: none; border-radius: 5px; cursor: pointer;">Clear List</button>
-                        </div>
-                    `;
-                    return;
-                }
-
-                container.innerHTML = validGyms.map(gym => {
-                    // Get the first image or use default
-                    let imageUrl = '../img/e1.jpg';
-                    if (gym.images && gym.images.length > 0) {
-                        const imagePath = gym.images[0];
-                        const cleanPath = imagePath.replace(/^\.\//, '').trim();
-                        if (cleanPath && cleanPath.startsWith('images/')) {
-                            imageUrl = `http://localhost:3000/${cleanPath}`;
-                        }
-                    }
-
-                    return `
-                        <div class="list-item" data-gym-id="${gym.id}">
-                            <a href="about_gym.html?id=${gym.id}" style="display: flex; align-items: center; text-decoration: none; color: inherit; flex: 1;">
-                                <img src="${imageUrl}" alt="${gym.name}" onerror="this.src='../img/e1.jpg'" style="width: 100px; height: 100px; object-fit: cover; margin-right: 15px;">
-                                <div class="info">
-                                    <h3>${gym.name || 'Gym Name'}</h3>
-                                    <p>${gym.description ? gym.description.substring(0, 100) + '...' : 'No description available'}</p>
-                                </div>
-                            </a>
-                            <div class="delete-icon" onclick="removeGym(${gym.id})" style="cursor: pointer;">
-                                <i class="fa fa-trash" aria-hidden="true"></i>  
-                            </div>
-                        </div>
-                    `;
-                }).join('');
-
-            } catch (error) {
-                console.error('Error loading visit list:', error);
-                container.innerHTML = `
-                    <div style="text-align: center; padding: 40px;">
-                        <p style="color: #f44336;">Error loading your visit list. Please try again later.</p>
-                    </div>
-                `;
-            }
-        }
-
-        // Remove gym from list
-        function removeGym(gymId) {
-            if (confirm('Remove this gym from your visit list?')) {
-                removeGymFromVisitList(gymId);
-                // Remove the element from DOM
-                const item = document.querySelector(`[data-gym-id="${gymId}"]`);
-                if (item) {
-                    item.remove();
-                }
-                // Reload list to update count
-                loadVisitList();
-            }
-        }
-
-        // Clear entire visit list
-        function clearVisitList() {
-            if (confirm('Clear your entire visit list?')) {
-                localStorage.removeItem('gymVisitList');
-                loadVisitList();
-            }
-        }
-
-        // Load visit list when page loads
-        document.addEventListener('DOMContentLoaded', loadVisitList);
-    </script>
-
-    
+    async function load() {
+      var ids = AAAGym.visitList();
+      if (!ids.length) {
+        listEl.innerHTML = '<div class="empty">Nothing pinned yet. Open a gym and add it to visits.</div>';
+        return;
+      }
+      var gyms = await Promise.all(ids.map(function (id) {
+        return AAAGym.request('/gym/' + id).catch(function () { return null; });
+      }));
+      gyms = gyms.filter(Boolean);
+      if (!gyms.length) {
+        listEl.innerHTML = '<div class="empty">Those gyms are no longer listed.</div>';
+        return;
+      }
+      listEl.innerHTML = gyms.map(function (gym) {
+        return '<article class="visit-item" data-id="' + gym.id + '">' +
+          '<img src="' + AAAGym.imageUrl(gym.images && gym.images[0]) + '" alt="" onerror="this.src=\'' + AAAGym.fallbackImg + '\'">' +
+          '<a class="grow" href="about_gym.html?id=' + gym.id + '"><h3>' + AAAGym.escape(gym.name) + '</h3><p>' + AAAGym.escape((gym.description || '').slice(0, 110)) + '</p></a>' +
+          '<button class="btn btn-ghost" data-remove="' + gym.id + '">Remove</button></article>';
+      }).join('');
+      listEl.querySelectorAll('[data-remove]').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          AAAGym.toggleVisit(btn.getAttribute('data-remove'));
+          load();
+        });
+      });
+    }
+    load();
+  </script>
 </body>
 </html>

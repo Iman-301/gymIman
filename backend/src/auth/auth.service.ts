@@ -1,83 +1,117 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { CreateUserDto } from './dto/create-user.dto';
-import { Repository } from 'typeorm';
-import { User } from './entity/user.entity';
-import * as bcrypt from 'bcryptjs';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { InjectRepository } from '@nestjs/typeorm';
+import * as bcrypt from 'bcryptjs';
+import { Repository } from 'typeorm';
+import { CreateUserDto } from './dto/create-user.dto';
+import { User } from './entity/user.entity';
 
+type PublicUser = Omit<User, 'password'>;
 
 @Injectable()
 export class AuthService {
-
   constructor(
     @InjectRepository(User)
     private userRepository: Repository<User>,
     private jwtService: JwtService,
-  ){}
-  
-  async create(createUserDto: CreateUserDto): Promise<User>{
-    const hashedPassword=await bcrypt.hash(createUserDto.password,10);
-    const user=this.userRepository.create({
-        ...createUserDto,
-        password: hashedPassword
-       
-    });
-    return this.userRepository.save(user)
+  ) {}
+
+  private strip(user: User): PublicUser {
+    const { password, ...safe } = user;
+    return safe;
   }
-  async validateUser(username: string, pass: string,role: string):Promise<any>{
-    const user=await this.userRepository.findOne({where: {username}});
-    if (user && user.role===role && (await bcrypt.compare(pass, user.password))){
-      const {password, ...result}=user;
-      return result
+
+  async create(createUserDto: CreateUserDto): Promise<PublicUser> {
+    const existing = await this.userRepository.findOne({
+      where: [{ email: createUserDto.email }, { username: createUserDto.username }],
+    });
+    if (existing) {
+      throw new ConflictException('Email or username is already taken');
+    }
+
+    const hashedPassword = await bcrypt.hash(createUserDto.password, 12);
+    const user = this.userRepository.create({
+      ...createUserDto,
+      password: hashedPassword,
+    });
+    const saved = await this.userRepository.save(user);
+    return this.strip(saved);
+  }
+
+  async validateUser(username: string, pass: string, role: string) {
+    const user = await this.userRepository.findOne({ where: { username } });
+    if (
+      user &&
+      user.role === role &&
+      (await bcrypt.compare(pass, user.password))
+    ) {
+      return this.strip(user);
     }
     return null;
   }
-// after validation i mean after the validateUser an accessToken made form the signed payload 
-// The generated JWT can then be sent back to the client, allowing the client to include it in the Authorization header of subsequent requests to access protected routes in your application.
-// the login tke the user because the login proceess will return user in the @Req req 
-  async login(user: User){
-    const payload={username: user.username, sub: user.id, role: user.role, email: user.email}
-    console.log(payload)
+
+  login(user: PublicUser) {
+    const payload = {
+      username: user.username,
+      sub: user.id,
+      role: user.role,
+      email: user.email,
+    };
     return {
       access_token: this.jwtService.sign(payload),
       user: payload,
-      // this means include user ifo in the token
+    };
+  }
+
+  async publicUser(userId: number): Promise<PublicUser> {
+    const user = await this.userRepository.findOne({ where: { id: userId } });
+    if (!user) {
+      throw new NotFoundException('User not found');
     }
+    return this.strip(user);
   }
 
-  async changePassword(userId: number, newPassword: string): Promise<User>{
-      console.log('User  ID:', userId);
-        const hashedPassword=await bcrypt.hash(newPassword, 10)
-        await this.userRepository.update(userId, {password: hashedPassword})
-        return this.userRepository.findOne({where: {id: userId}})
-
+  async changePassword(userId: number, newPassword: string): Promise<PublicUser> {
+    await this.publicUser(userId);
+    const hashedPassword = await bcrypt.hash(newPassword, 12);
+    await this.userRepository.update(userId, { password: hashedPassword });
+    return this.publicUser(userId);
   }
- 
-  async changeEmail(userId: number, newEmail: string):Promise<User>{
-    const user=await this.userRepository.findOne({where: {id: userId}})
-    if (!user){
-      throw new NotFoundException('úser not found')
+
+  async changeEmail(userId: number, newEmail: string): Promise<PublicUser> {
+    const taken = await this.userRepository.findOne({ where: { email: newEmail } });
+    if (taken && taken.id !== userId) {
+      throw new ConflictException('Email is already taken');
     }
-    user.email=newEmail;
-    return this.userRepository.save(user);
-  }
-
-  async changeUsername(id: number, newUsername: string): Promise<User>{
-    const user=await this.userRepository.findOne({where: {id: id}});
-    if (!user){
-      throw new NotFoundException('user not found')
+    const user = await this.userRepository.findOne({ where: { id: userId } });
+    if (!user) {
+      throw new NotFoundException('User not found');
     }
-    user.username=newUsername;
-    return this.userRepository.save(user);
+    user.email = newEmail;
+    return this.strip(await this.userRepository.save(user));
   }
 
-
-  async deleteAccount(userId: number): Promise<void>{
-    await this.userRepository.delete(userId)
+  async changeUsername(id: number, newUsername: string): Promise<PublicUser> {
+    const taken = await this.userRepository.findOne({
+      where: { username: newUsername },
+    });
+    if (taken && taken.id !== id) {
+      throw new ConflictException('Username is already taken');
+    }
+    const user = await this.userRepository.findOne({ where: { id } });
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+    user.username = newUsername;
+    return this.strip(await this.userRepository.save(user));
   }
 
- 
+  async deleteAccount(userId: number): Promise<{ message: string }> {
+    await this.userRepository.delete(userId);
+    return { message: 'Account deleted' };
+  }
 }
-
-

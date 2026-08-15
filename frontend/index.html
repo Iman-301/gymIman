@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AAAGym — the gym register</title>
+  <meta name="description" content="AAAGym is a register of independent gyms. Browse floors, pin visits, and talk to owners.">
+  <link rel="icon" href="favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+  <section class="hero">
+    <div>
+      <p class="kicker">Independent rooms. Honest hours.</p>
+      <h1 class="display">Find a floor.<br>Own the hour.</h1>
+      <p class="lede">AAAGym is not a chain site. It is a public register of gyms you can actually walk into — services, prices, and a visit list that lives on your phone.</p>
+      <div class="hero-actions">
+        <a class="btn" href="common/registration_page.html">Join the register</a>
+        <a class="btn btn-ghost" href="common/login.html">I already train here</a>
+      </div>
+      <div class="stats">
+        <div class="stat"><b>01</b><span>Members browse listed gyms</span></div>
+        <div class="stat"><b>02</b><span>Owners publish a living page</span></div>
+        <div class="stat"><b>03</b><span>Visits stay on your list</span></div>
+      </div>
+    </div>
+    <div class="film">
+      <img src="img/landing.jpg" alt="Training floor">
+      <img src="img/g2.jpg" alt="Weights">
+      <img src="img/g4.jpg" alt="Gym interior">
+      <img src="img/e2.jpg" alt="Athlete">
+    </div>
+  </section>
+
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee-track">
+      <span>Strength</span><span>Community</span><span>Access</span><span>Discipline</span>
+      <span>Iron</span><span>Breath</span><span>Register</span><span>Show up</span>
+      <span>Strength</span><span>Community</span><span>Access</span><span>Discipline</span>
+      <span>Iron</span><span>Breath</span><span>Register</span><span>Show up</span>
+    </div>
+  </div>
+
+  <main class="page">
+    <p class="kicker">How the register works</p>
+    <h2 class="display" style="font-size: clamp(2rem, 5vw, 3.4rem); margin-bottom: 20px;">Two doors. One floor plan.</h2>
+    <div class="split">
+      <article class="panel">
+        <p class="kicker">Members</p>
+        <h3 class="display">Walk the catalog</h3>
+        <p>Create a member account, browse gyms, open a page, and pin the ones you intend to visit. No fake bookings. A list you control.</p>
+      </article>
+      <article class="panel">
+        <p class="kicker">Owners</p>
+        <h3 class="display">Publish the room</h3>
+        <p>List the name, facilities, services, prices, and FAQs. Upload a portrait of the floor. Edit it whenever the room changes.</p>
+      </article>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <strong>AAA GYM</strong>
+    <p>A register for rooms that still smell like chalk.</p>
+  </footer>
+
+  <script src="js/config.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/ui.js"></script>
+  <script>
+    AAAGym.mountChrome({ role: 'guest' });
+  </script>
+</body>
+</html>

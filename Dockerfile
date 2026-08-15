@@ -1,22 +1,12 @@
-# Silver task Dockerfile for AAAGym backend
-FROM node:20.11.0
+FROM node:20.11.0-alpine
 
 WORKDIR /app
 
-# Copy package files
 COPY backend/package*.json ./
-
-# Install dependencies using lockfile (required by Silver)
 RUN npm ci
 
-# Copy backend source
 COPY backend/ ./
+RUN mkdir -p uploads/gym-images && npm run build
 
-# Build the NestJS application
-RUN npm run build
-
-# Expose port (optional, for documentation)
 EXPOSE 3000
-
-# Default command
 CMD ["npm", "run", "start:prod"]
